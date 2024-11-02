@@ -1,0 +1,62 @@
+import React, { useState } from 'react';
+
+const OtpPage = () => {
+  const [otp, setOtp] = useState(['', '', '', '']);
+
+  const handleChange = (e, index) => {
+    const value = e.target.value;
+    if (!/^\d*$/.test(value)) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+
+    if (value && index < 3) {
+      document.getElementById(`otp-${index + 1}`).focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Backspace' && otp[index] === '' && index > 0) {
+      document.getElementById(`otp-${index - 1}`).focus();
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const otpCode = otp.join('');
+    alert(`OTP entered: ${otpCode}`);
+   
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h2 className="text-2xl font-semibold mb-4">Enter OTP</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col items-center">
+        <div className="flex space-x-2 mb-4">
+          {otp.map((digit, index) => (
+            <input
+              key={index}
+              type="text"
+              maxLength="1"
+              value={digit}
+              onChange={(e) => handleChange(e, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              id={`otp-${index}`}
+              className="w-12 h-12 text-center text-2xl font-semibold border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+            />
+          ))}
+        </div>
+        <button
+          type="submit"
+          className="px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold transition duration-300 ease-in-out hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+        >
+          Verify OTP
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default OtpPage;
